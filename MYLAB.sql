@@ -1,0 +1,128 @@
+USE TASKMANAGEMENT
+
+SELECT 'HELLO JIII' AS GRETINGS
+
+SELECT TOP 2 * FROM EMPLOYEE ORDER BY EMPID DESC
+
+SELECT TOP 1 * FROM EMPLOYEE ORDER BY EMPID DESC
+
+-- GET EMPNAME DISPLAYED AS EMP NAME- EMPID. EG MEENA-2001
+
+DECLARE @NAME NVARCHAR(50), @VAL INT
+SET @NAME=(SELECT EMPNAME FROM EMPLOYEE WHERE EMPID=1004)
+SET @VAL=(SELECT TOP 1 EMPID FROM EMPLOYEE WHERE EMPNAME='BENAMI GUY')
+SELECT (@NAME+'-'+ CAST(@VAL AS NVARCHAR)) AS FORMATTED_NAME
+
+
+
+SELECT EMPNAME +'-'+ CAST(EMPID AS NVARCHAR) AS FORMATTED_NAME FROM EMPLOYEE 
+
+-- Add extra records (Around 5 more) to Task table
+INSERT INTO TASKTABLE(TASKNAME,STARTDATE,ENDTIME) VALUES('DAY11','10-30-2023', '10-31-2024')
+SELECT * FROM TASKTABLE
+
+
+-- GET ALL DATES
+SELECT * FROM TASKTABLE WHERE TASKNAME LIKE '%DAY%'
+
+--GET ALL TASKS THAT END BY END OF OCTOBER
+
+SELECT * FROM TASKTABLE WHERE ENDTIME < '2024-10-31'
+
+--GET ALL TASKS THAT END BY END OF OCTOBER
+
+SELECT * FROM TASKTABLE WHERE ENDTIME < '2024-10-31'
+
+--Get all tasks that start on the same day (Eg: 25-Oct-2023)
+SELECT * FROM TASKTABLE WHERE STARTDATE= '2023-10-28'
+
+--Select tasks and display in format Task Name - starts on- StartDate - ends by- End Date
+
+SELECT (TASKNAME+'- STARTS ON -'+CAST(STARTDATE AS nvarchar)+'- ENDS BY-'+CAST(ENDTIME AS nvarchar) ) FROM TASKTABLE
+
+--6. Select Tasks that start in October with Task name containing 'coding'
+
+SELECT TASKNAME FROM TASKTABLE WHERE CAST(STARTDATE AS nvarchar) LIKE %'10'%
+
+CREATE TABLE XXX (SELECT * FROM TASKTABLE)
+
+--USING JOINS
+
+  -- GET TASK NAME AND MATCHING EMPID
+  SELECT T.TASKNAME, ET.EMPID FROM TASKTABLE T INNER JOIN EMPTASK AS ET ON T.TASKID=ET.TASKID
+  
+  --GET EMPNAME WITH CORRESPONDING TASK NAMES
+
+
+
+  --
+--CREATE VIEWS FOR COUNT
+
+CREATE VIEW VW_COUNT AS
+SELECT E.EMPNAME, COUNT(T.TASKNAME) AS TASKCOUNT FROM EMPLOYEE E LEFT OUTER JOIN EMPTASK ET ON E.EMPID=ET.EMPID
+LEFT OUTER JOIN  TASKTABLE T ON T.TASKID=ET.TASKID
+GROUP BY E.EMPNAME
+
+SELECT * FROM VW_COUNT
+
+-- CREATE STORED PROCEDURE FOR COUNT
+
+CREATE PROCEDURE STORE_PROCEDURE AS
+SELECT E.EMPNAME, ET.TASKID, COUNT(T.TASKNAME) AS TASKCOUNT FROM EMPLOYEE E LEFT OUTER JOIN EMPTASK ET ON E.EMPID=ET.EMPID
+LEFT OUTER JOIN  TASKTABLE T ON T.TASKID=ET.TASKID
+GROUP BY E.EMPNAME, ET.TASKID
+
+EXEC STORE_PROCEDURE
+
+
+--day 3
+-- Create stored procedures for 
+--- select all tasks for an empId
+
+select * from employee
+
+CREATE PROCEDURE SP_alltask @EMPid int
+AS
+SELECT E.EMPNAME, T.TASKNAME FROM EMPLOYEE AS E LEFT OUTER JOIN EMPTASK AS ET ON E.EMPID=ET.EMPID
+LEFT OUTER JOIN TASKTABLE AS T ON T.TASKID=ET.TASKID
+WHERE E.EMPid=@EMPid
+
+EXEC SP_alltask '1000'
+
+--- Get all tasks grouped by endDate
+
+select count(taskname) as [number of task],endtime  from tasktable
+group by endtime
+
+
+
+-- - Update the dates for a given TaskId (params: TaskId, StartDate, EndDate)
+select * from tasktable
+
+CREATE PROCEDURE sp_time @taskid int, @startdate datetime, @endtime datetime
+AS
+update tasktable
+set startdate=@startdate,endtime=@endtime 
+where taskid=@taskid
+
+exec sp_time '2','10-25-2023','10-25-2024'
+
+--- Delete a task for an EmployeeId
+
+alter procedure sp_delet @empid int as
+delete from emptask where empid=@empid
+
+
+exec sp_delet '1000'
+
+select * from emptask
+
+
+--triggers
+
+create trigger tr_onInsert
+on employee
+after insert
+as
+begin
+	
