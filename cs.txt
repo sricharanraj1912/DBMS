@@ -1,0 +1,95 @@
+// See https://aka.ms/new-console-template for more information
+void meth()
+{
+    Console.WriteLine("Hello, World!");
+    int num1 = 100;
+    int num2 = 100;
+    Console.WriteLine("sum=" + (num1 + num2));
+
+    //alternative declaration
+    var num3 = 200;
+    var formattedfloat = 200f;
+    var formatteddouble = 200d;
+    var formatteddecimal = 200m;
+
+    Console.WriteLine(num3.GetType().Name);
+    Console.WriteLine(formattedfloat.GetType().Name);
+    Console.WriteLine(formatteddouble.GetType().Name);
+    Console.WriteLine(formatteddecimal.GetType().Name);
+    Console.WriteLine($"the data tupe of formattedfloat is{formattedfloat.GetType().Name}");
+    Console.WriteLine($"the data tupe of num3 is{num3.GetType().Name}");
+
+    bool isEverything = false;
+    string gm = "hello";
+    char isSingle = 'S';
+
+    Console.WriteLine($"value of {nameof(isEverything)}is{isEverything}");
+}
+//meth();
+void ConversionOfTypes()
+{
+    int num1 = 100;
+    double num2 = 100;
+    bool isEverythingOk = true;
+    string str = "hello";
+    string strnum = "100";
+
+    var result1 = (double)num1;
+    var result2 = (int)num2;
+    // var results3=(string)isEverythingOk;// string on heap & bool on stack. hence error in casting
+
+    var convert1 = Convert.ToString(num1);
+    var convert2 = Convert.ToInt32(strnum);
+    //var constant3= Convert.ToInt32(str); //error at runtime
+}
+//ConversionOfTypes();
+
+void WorkingWithArrays()
+{
+    int[] arr = new int[3];
+    arr[0] = 1;
+    arr[1] = 2;
+    arr[2] = 3;
+
+    for(int i=0;i<arr.Length; i++)
+    {
+        Console.WriteLine($"value={arr[i]}");
+    }
+
+    string[] greetings = { "namaste", "hello", "hola" };
+
+    int counter = 0;
+    while(counter<greetings.Length-1)
+    {Console.WriteLine($"a new way to greet:{greetings[counter]}");
+        counter++;
+
+    }
+    int[] evens = {2,4,6,8,10 };
+    counter = 0;
+    do
+    {
+        Console.WriteLine($"the next even number:{evens[counter]}");
+        counter++;
+    } while (counter <= evens.Length-1);
+    object[] objArray = { 100, "ok", new[] { 1, 2, 3 } };
+
+    foreach (var singleitem in objArray)
+    {
+        if (singleitem.GetType().Name == "Int32[]")
+        {
+            foreach (var item in (Int32[])singleitem){
+                Console.WriteLine(item);
+            }
+
+        }
+        else
+        {
+            Console.WriteLine($"simple item is{nameof(objArray)}:{singleitem}");
+        }
+
+
+    }
+}
+
+WorkingWithArrays();
+
